@@ -73,11 +73,31 @@ mongo.connect("mongodb://localhost:27018", function (err, conn) {
                         });
 
                         break;
+                    case 'POST':
+                        rep.writeHead(200, 'OK', {'Content-type': 'application/json'});
+
+                        var newObject = {
+                            _id: new ObjectId(),
+                            userName: "asdasd"
+                        };
+                        accounts.insertOne(newObject, function (error, succes) {
+                            if(succes)console.log("został dodany");
+                            rep.end(JSON.stringify({status: 'success'}));
+                        });
+
+                    case 'DELETE':
+                        rep.writeHead(200, 'OK', {'Content-type': 'application/json'});
+                        accounts.find({}).toArray(function (err, users) {
+                            rep.end(JSON.stringify(users));
+                        });
+
+                        break;
                     default:
                         rep.writeHead(501,'Not implemeted',{'Content-type':'application/json'});
                         rep.end(JSON.stringify({error : "Not implemeted"}));
                 }
                 break;
+
             default:
                 if(/^\/(html|css|js|fonts|img)\//.test(req.url)) {
                     var fileName = path.normalize('./' + req.url);
