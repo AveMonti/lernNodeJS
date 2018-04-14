@@ -50,7 +50,7 @@ mongo.connect("mongodb://localhost:27018", function (err, conn) {
             case '/':
                 serverFile(rep, 'html/index.html',200, '');
                 break;
-            case '/users':
+            case '/user':
                 switch (req.method){
                     case 'GET':
                         rep.writeHead(200,'OK',{'Content-type':'application/json'});
@@ -59,6 +59,20 @@ mongo.connect("mongodb://localhost:27018", function (err, conn) {
                     });
                     break;
 
+                    default:
+                        rep.writeHead(501,'Not implemeted',{'Content-type':'application/json'});
+                        rep.end(JSON.stringify({error : "Not implemeted"}));
+                }
+                break;
+            case '/users':
+                switch (req.method){
+                    case 'GET':
+                        rep.writeHead(200,'OK',{'Content-type': 'application/json'});
+                        accounts.find({}).toArray(function (err, users) {
+                            rep.end(JSON.stringify(users));
+                        });
+
+                        break;
                     default:
                         rep.writeHead(501,'Not implemeted',{'Content-type':'application/json'});
                         rep.end(JSON.stringify({error : "Not implemeted"}));
